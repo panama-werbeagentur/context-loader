@@ -1,0 +1,17 @@
+{
+	"name": "panama/context-loader",
+	"description": "Panama TYPO3 Context Loader Extension",
+	"type": "typo3-cms-extension",
+	"preferred-install": "dist",
+	"homepage": "http://www.panama.de/",
+	"version": "2017.17.0",
+	"autoload": {
+		"psr-4": {
+			"Panama\\ContextLoader\\": "Classes/"
+		}
+	},
+	"require": {
+        "php": "^7.0",
+		"typo3/cms": "^8.7"
+	}
+}
