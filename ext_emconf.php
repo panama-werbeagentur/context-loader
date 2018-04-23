@@ -5,7 +5,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'TYPO3 Context Loader Extension',
 	'category' => 'services',
 	'shy' => 0,
-	'version' => '2017.27.0',
+	'version' => '2018.17.0',
 	'dependencies' => 'typo3',
 	'conflicts' => '',
 	'priority' => '',
@@ -25,7 +25,6 @@ $EM_CONF[$_EXTKEY] = array(
 	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '8.7.0-8.7.99',
 		),
 		'conflicts' => array(
 		),
