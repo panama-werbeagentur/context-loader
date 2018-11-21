@@ -4,7 +4,7 @@
 	"type": "typo3-cms-extension",
 	"preferred-install": "dist",
 	"homepage": "http://www.panama.de/",
-	"version": "2018.47.0",
+	"version": "2018.47.1",
 	"autoload": {
 		"psr-4": {
 			"Panama\\ContextLoader\\": "Classes/"
