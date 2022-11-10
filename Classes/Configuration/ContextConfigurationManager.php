@@ -36,104 +36,104 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
  */
 class ContextConfigurationManager
 {
-    /**
-     * @var string Path to the basic file, for all Contexts, relative to PATH_site
-     */
-    protected $basicConfigurationFile = 'typo3conf/AdditionalConfiguration/AllContext.php';
+	/**
+	 * @var string Path to the basic file, for all Contexts, relative to PATH_site
+	 */
+	protected $basicConfigurationFile = 'typo3conf/AdditionalConfiguration/AllContext.php';
 
-    /**
-     * @var bool
-     */
-    protected $basicConfigurationFileInUse = false;
+	/**
+	 * @var bool
+	 */
+	protected $basicConfigurationFileInUse = false;
 
-    /**
-     * @var string Path to the environment config file, for all Contexts, relative to PATH_site
-     */
-    protected $environmentConfigurationFile = 'typo3conf/ext/context_loader/Configuration/AdditionalConfiguration/EnvironmentContext.php';
+	/**
+	 * @var string Path to the environment config file, for all Contexts, relative to PATH_site
+	 */
+	protected $environmentConfigurationFile = 'typo3conf/ext/context_loader/Configuration/AdditionalConfiguration/EnvironmentContext.php';
 
-    /**
-     * @var bool
-     */
-    protected $environmentConfigurationFileInUse = false;
+	/**
+	 * @var bool
+	 */
+	protected $environmentConfigurationFileInUse = false;
 
-    /**
-     * @var string Absolute path to typo3conf directory
-     */
-    protected $pathAdditionalConfiguration = PATH_typo3conf . 'AdditionalConfiguration/';
+	/**
+	 * @var string Absolute path to typo3conf directory
+	 */
+	protected $pathAdditionalConfiguration = '';
 
-    /**
-     * @var string[]
-     */
-    protected $registeredContextConfigurationFiles = [];
+	/**
+	 * @var string[]
+	 */
+	protected $registeredContextConfigurationFiles = [];
 
-    /**
-     * @param string $contextPath Path to use, to load the context configuration file
-     *
-     * @return void
-     */
-    public function registerContextConfiguration(string $contextPath)
-    {
-        $this->registeredContextConfigurationFiles[] = sprintf(
-            '%s%sContext.php',
-            $this->pathAdditionalConfiguration,
-            $contextPath
-        );
-        return $this;
-    }
+	/**
+	 * @param string $contextPath Path to use, to load the context configuration file
+	 *
+	 * @return void
+	 */
+	public function registerContextConfiguration(string $contextPath)
+	{
+		$this->registeredContextConfigurationFiles[] = sprintf(
+			'%s%sContext.php',
+			\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3conf/AdditionalConfiguration/',
+			$contextPath
+		);
+		return $this;
+	}
 
-    public function useEnvironmentConfiguration()
-    {
-        if (!$this->environmentConfigurationFileInUse) {
-            array_unshift($this->registeredContextConfigurationFiles, PATH_site . $this->environmentConfigurationFile);
-            $this->environmentConfigurationFileInUse = true;
-        }
-        return $this;
-    }
+	public function useEnvironmentConfiguration()
+	{
+		if (!$this->environmentConfigurationFileInUse) {
+			array_unshift($this->registeredContextConfigurationFiles, \TYPO3\CMS\Core\Core\Environment::getPublicPath() . $this->environmentConfigurationFile);
+			$this->environmentConfigurationFileInUse = true;
+		}
+		return $this;
+	}
 
-    public function useEnvConfiguration()
-    {
-        return $this->useEnvironmentConfiguration();
-    }
+	public function useEnvConfiguration()
+	{
+		return $this->useEnvironmentConfiguration();
+	}
 
-    /**
-     * Do make use of the basic file for all contexts
-     *
-     * @return $this
-     */
-    public function useBasicConfiguration()
-    {
-        if (!$this->basicConfigurationFileInUse) {
-            array_push($this->registeredContextConfigurationFiles, PATH_site . $this->basicConfigurationFile);
-            $this->basicConfigurationFileInUse = true;
-        }
-        return $this;
-    }
+	/**
+	 * Do make use of the basic file for all contexts
+	 *
+	 * @return $this
+	 */
+	public function useBasicConfiguration()
+	{
+		if (!$this->basicConfigurationFileInUse) {
+			array_push($this->registeredContextConfigurationFiles, \TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' . $this->basicConfigurationFile);
+			$this->basicConfigurationFileInUse = true;
+		}
+		return $this;
+	}
 
-    /**
-     * Load all registered context configuration files and merge them into the TYPO3_CONF_VARS
-     *
-     * @return void
-     */
-    public function loadAndMergeConfiguration()
-    {
-        foreach ($this->registeredContextConfigurationFiles as $file) {
-            if (file_exists($file)) {
-                $contextConfig = require $file;
-                if (is_array($contextConfig)) {
-                    $this->exportConfiguration($contextConfig);
-                }
-            }
-        }
-    }
+	/**
+	 * Load all registered context configuration files and merge them into the TYPO3_CONF_VARS
+	 *
+	 * @return void
+	 */
+	public function loadAndMergeConfiguration()
+	{
+		foreach ($this->registeredContextConfigurationFiles as $file) {
+			if (file_exists($file)) {
+				$contextConfig = require $file;
+				if (is_array($contextConfig)) {
+					$this->exportConfiguration($contextConfig);
+				}
+			}
+		}
+	}
 
-    /**
-     * Exports the config array into the global config array
-     *
-     * @param array $contextConfig
-     */
-    protected function exportConfiguration(array $contextConfig)
-    {
-        ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TYPO3_CONF_VARS'], $contextConfig, true, false, true);
-    }
+	/**
+	 * Exports the config array into the global config array
+	 *
+	 * @param array $contextConfig
+	 */
+	protected function exportConfiguration(array $contextConfig)
+	{
+		ArrayUtility::mergeRecursiveWithOverrule($GLOBALS['TYPO3_CONF_VARS'], $contextConfig, true, false, true);
+	}
 
 }

@@ -91,7 +91,7 @@ class ContextLoader
     public static function getInstance()
     {
         if (is_null(static::$instance)) {
-            $applicationContext = GeneralUtility::getApplicationContext() ?: Bootstrap::getInstance()->getApplicationContext();
+            $applicationContext = GeneralUtility::getContext() ?: Bootstrap::getInstance()->getApplicationContext();
             self::$instance = new static($applicationContext);
         }
         return static::$instance;
